@@ -240,6 +240,18 @@ module.exports = function(state, emit, archive) {
             ${state.translate('copyLinkButton')}
           </button>
         `;
+  const shortenLink = html`
+    <button
+      class="link-primary self-end flex items-start"
+      onclick=${shorten}
+      title="${state.translate('shortenLinkButton')}"
+    >
+      <svg class="h-4 w-4 mr-2">
+        <use xlink:href="${assets.get('share-24.svg')}#icon" />
+      </svg>
+      ${state.translate('shortenLinkButton')}
+    </button>
+  `;
   const dl =
     platform() === 'web'
       ? html`
@@ -282,7 +294,7 @@ module.exports = function(state, emit, archive) {
       ${archiveDetails(state.translate, archive)}
       <hr class="w-full border-t my-4 dark:border-grey-70" />
       <div class="flex justify-between w-full">
-        ${dl} ${copyOrShare}
+        ${dl} ${copyOrShare} ${state.WEB_UI.CAN_SHORTEN_URL ? shortenLink : ''}
       </div>
     </send-archive>
   `;
@@ -296,6 +308,17 @@ module.exports = function(state, emit, archive) {
       () => (text.textContent = state.translate('copyLinkButton')),
       1000
     );
+  }
+
+  function shorten(event) {
+    event.stopPropagation();
+    const text = event.target.lastChild;
+    text.textContent = state.translate('copiedUrl');
+    setTimeout(
+      () => (text.textContent = state.translate('shortenLinkButton')),
+      1000
+    );
+    emit('shorten', archive);
   }
 
   function del(event) {

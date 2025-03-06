@@ -1,11 +1,13 @@
 import FileReceiver from './fileReceiver';
 import FileSender from './fileSender';
+import confirmDeleteDialog from './ui/confirmDeleteDialog';
 import copyDialog from './ui/copyDialog';
 import faviconProgressbar from './ui/faviconProgressbar';
 import okDialog from './ui/okDialog';
 import shareDialog from './ui/shareDialog';
 import signupDialog from './ui/signupDialog';
 import surveyDialog from './ui/surveyDialog';
+import { shorten } from './api';
 import { bytes, locale } from './utils';
 import { copyToClipboard, delay, openLinksInNewTab, percent } from './utils';
 
@@ -31,6 +33,15 @@ export default function(state, emitter) {
     }
     faviconProgressbar.updateFavicon(state.transfer.progressRatio);
     render();
+  }
+
+  async function deleteFile(ownedFile) {
+    try {
+      state.storage.remove(ownedFile.id);
+      await ownedFile.del();
+    } catch (e) {
+      state.sentry.captureException(e);
+    }
   }
 
   emitter.on('DOMContentLoaded', () => {
@@ -65,13 +76,30 @@ export default function(state, emitter) {
   });
 
   emitter.on('delete', async ownedFile => {
-    try {
-      state.storage.remove(ownedFile.id);
-      await ownedFile.del();
-    } catch (e) {
-      state.sentry.captureException(e);
+    if (state.WEB_UI.SHOW_DELETE_CONFIRM) {
+      state.modal = confirmDeleteDialog(ownedFile);
+    } else {
+      await deleteFile(ownedFile);
     }
     render();
+  });
+
+  emitter.on('confirmedDelete', async ownedFile => {
+    await deleteFile(ownedFile);
+    render();
+  });
+
+  emitter.on('shorten', async ownedFile => {
+    try {
+      let url = await shorten(
+        ownedFile.id,
+        ownedFile.secretKey,
+        ownedFile.ownerToken
+      );
+      emitter.emit('copy', url);
+    } catch (e) {
+      emitter.emit('pushState', '/error');
+    }
   });
 
   emitter.on('cancel', () => {
@@ -161,7 +189,7 @@ export default function(state, emitter) {
       }
       state.modal = state.capabilities.share
         ? shareDialog(ownedFile.name, ownedFile.url)
-        : copyDialog(ownedFile.name, ownedFile.url);
+        : copyDialog(ownedFile);
     } catch (err) {
       if (err.message === '0') {
         //cancelled. do nothing

@@ -90,6 +90,20 @@ export async function del(id, owner_token) {
   return response.ok;
 }
 
+export async function shorten(id, key, owner_token) {
+  const response = await fetch(
+    getApiUrl(`/api/shorten/${id}`),
+    post({ owner_token, key })
+  );
+  if (response.ok) {
+    const data = await response.json();
+    return {
+      url: data.url
+    };
+  }
+  throw new Error(response.status);
+}
+
 export async function setParams(id, owner_token, bearerToken, params) {
   const response = await fetch(
     getApiUrl(`/api/params/${id}`),

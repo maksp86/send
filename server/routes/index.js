@@ -111,6 +111,7 @@ module.exports = function(app) {
   app.post('/api/filelist/:id([\\w-]{16})', auth.fxa, filelist.post);
   app.post('/api/upload', auth.fxa, require('./upload'));
   app.post(`/api/delete/:id${ID_REGEX}`, auth.owner, require('./delete'));
+  app.post(`/api/shorten/:id${ID_REGEX}`, auth.owner, require('./shorten'));
   app.post(`/api/password/:id${ID_REGEX}`, auth.owner, require('./password'));
   app.post(
     `/api/params/:id${ID_REGEX}`,

@@ -20,6 +20,7 @@ export default class OwnedFile {
     this.dlimit = obj.dlimit || 1;
     this.dtotal = obj.dtotal || 0;
     this.keychain = new Keychain(obj.secretKey, obj.nonce);
+    this.secretKey = obj.secretKey;
     this._hasPassword = !!obj.hasPassword;
     this.timeLimit = obj.timeLimit;
   }

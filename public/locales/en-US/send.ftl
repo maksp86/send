@@ -86,6 +86,7 @@ fileSize = { $num }{ $units }
 totalSize = Total size: { $size }
 # the next line after the colon contains a file name
 copyLinkDescription = Copy the link to share your file:
+shortenLinkButton = Copy shorten
 copyLinkButton = Copy link
 downloadTitle = Download files
 downloadDescription = This file was shared via { -send-brand } with end-to-end encryption and a link that automatically expires.
@@ -131,6 +132,9 @@ accountBenefitSync = Manage shared files from any device
 accountBenefitMoz = Learn about other { -mozilla } services
 signOut = Sign out
 okButton = OK
+continueButton = Continue
+cancelButton = Cancel
+deleteConfirmation = Are you sure you want to delete this file?
 downloadingTitle = Downloading
 noStreamsWarning = This browser might not be able to decrypt a file this big.
 noStreamsOptionCopy = Copy the link to open in another browser

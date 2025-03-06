@@ -29,7 +29,11 @@ class Header extends Component {
         wordmark:
           this.state.WEB_UI.CUSTOM_ASSETS.wordmark !== ''
             ? this.state.WEB_UI.CUSTOM_ASSETS.wordmark
-            : assets.get('wordmark.svg') + '#logo'
+            : assets.get('wordmark.svg') + '#logo',
+        wordmark_second:
+          this.state.WEB_UI.CUSTOM_ASSETS.wordmark_second !== ''
+            ? this.state.WEB_UI.CUSTOM_ASSETS.wordmark_second
+            : undefined
       };
     const title =
       platform() === 'android'
@@ -47,9 +51,27 @@ class Header extends Component {
                 alt="${this.state.translate('title')}"
                 src="${assetMap.icon}"
               />
-              <svg viewBox="66 0 340 64" class="w-48 md:w-64">
-                <use xlink:href="${assetMap.wordmark}" />
-              </svg>
+              <div>
+                <svg viewBox="66 0 340 64" class="w-48 md:w-64">
+                  <use href="${assetMap.wordmark}" />
+                </svg>
+                ${assetMap.wordmark_second
+                  ? html`
+                      <a
+                        href="${this.state.baseUrl
+                          ? this.state.baseUrl
+                              .split('.')
+                              .slice(-2)
+                              .join('.')
+                          : '/'}"
+                      >
+                        <svg viewBox="-36 0 340 60" class="w-28 md:w-36">
+                          <use href="${assetMap.wordmark_second}" />
+                        </svg>
+                      </a>
+                    `
+                  : ''}
+              </div>
             </a>
           `;
     return html`

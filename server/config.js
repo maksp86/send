@@ -175,7 +175,8 @@ const conf = convict({
   },
   custom_description: {
     format: String,
-    default: 'Encrypt and send files with a link that automatically expires to ensure your important documents don’t stay online forever.',
+    default:
+      'Encrypt and send files with a link that automatically expires to ensure your important documents don’t stay online forever.',
     env: 'CUSTOM_DESCRIPTION'
   },
   detect_base_url: {
@@ -187,6 +188,16 @@ const conf = convict({
     format: 'String',
     default: `${tmpdir()}${path.sep}send-${randomBytes(4).toString('hex')}`,
     env: 'FILE_DIR'
+  },
+  yourls_api_url: {
+    format: 'url',
+    default: 'https://yourls.dev.lcip.org',
+    env: 'YOURLS_API_URL'
+  },
+  yourls_signature: {
+    format: String,
+    default: '', //disabled
+    env: 'YOURLS_SIGNATURE'
   },
   fxa_url: {
     format: 'url',
@@ -222,6 +233,11 @@ const conf = convict({
     format: String,
     default: '',
     env: 'FXA_CSP_PROFILEIMAGE_URL'
+  },
+  show_delete_confirm: {
+    format: Boolean,
+    default: false,
+    env: 'SHOW_DELETE_CONFIRM'
   },
   survey_url: {
     format: String,
@@ -328,6 +344,11 @@ const conf = convict({
       format: String,
       default: '',
       env: 'UI_CUSTOM_ASSETS_WORDMARK'
+    },
+    wordmark_second: {
+      format: String,
+      default: '',
+      env: 'UI_CUSTOM_ASSETS_WORDMARK_SECOND'
     },
     custom_css: {
       format: String,
